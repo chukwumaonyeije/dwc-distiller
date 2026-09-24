@@ -299,3 +299,11 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - **Observed limitation:** PDF extraction preserved some source-layout artifacts, including an isolated page number, split words, and imperfect accented-character encoding. The text remained readable, but version 2 should normalize common extraction artifacts before distillation while retaining the visible editable source as the review boundary.
 - **Evidence captured:** Saved desktop screenshots for the empty state, loaded-PDF state, and completed AI result under `docs/screenshots/` for the Doctors Who Code and AgenticBuilderMD build logs.
 - **Remaining review:** Capture a narrow phone screenshot and verify clipboard behavior on the deployed site.
+
+### September 24 — End-of-day closeout
+
+Today ended with a complete public prototype at https://dwc-distiller.onyeije.workers.dev/. It accepts pasted text and text-based PDFs, exposes the extracted source for review, and returns a grounded four-part distillation through Workers AI. The public route has request limiting, the source is pushed to GitHub, and the repository contains screenshots of the empty, PDF-loaded, and completed-result states.
+
+The most important next activity is ordinary use. I will try different articles and notes, compare each output with its source, and record concrete failures before adding another input channel. The first known issue is PDF extraction quality: some files produce isolated page numbers, split words, or imperfect accented characters. Scanned PDFs still require OCR and remain outside the current scope.
+
+The local Wrangler development server was stopped at the end of the session. The production Worker remains live. Work resumes from [the September 25 plan](DWC_Distiller_Plan_2026-09-25.md).
