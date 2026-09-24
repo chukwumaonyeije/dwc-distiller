@@ -94,6 +94,19 @@ This update separates completed setup from remaining product work. The original 
 - **Technical context checked:** Current Cloudflare documentation supports outbound Worker `fetch()` calls and Browser Run extraction of rendered web content or Markdown. Workers request-body limits are much larger than this prototype's chosen input cap, but PDF parsing and large-text processing still have CPU, memory, model-context, and cost implications. Relevant references: https://developers.cloudflare.com/workers/runtime-apis/fetch/, https://developers.cloudflare.com/browser-run/, and https://developers.cloudflare.com/workers/platform/limits/.
 - **Publication angle:** “One input, one transformation” is the disciplined first boundary. The future system can accept many formats without allowing every ingestion problem to obscure whether the distillation itself is useful.
 
+#### September 24 — Baseline committed and Workers AI connected
+
+- **Checkpoint:** Committed the accepted text-preview interface, request path, tests, README, and journal as `c49f282` (`Build DWC Distiller interface and request flow`). The pre-existing `package-lock.json` metadata change was deliberately left out of the commit.
+- **AI binding:** Added `env.AI` in `wrangler.jsonc` and regenerated `worker-configuration.d.ts` with `npx wrangler types`, following current Cloudflare guidance.
+- **Model choice:** Selected `@cf/meta/llama-3.3-70b-instruct-fp8-fast`. Cloudflare currently documents this model as supporting JSON Mode; structured output matters more here than choosing the newest general model. The requested schema contains a core idea, exactly three key points, an uncertainty statement, and one next question.
+- **Grounding controls:** The system instruction limits the model to the supplied source, prohibits outside facts and unsupported assumptions, and treats instructions inside the source as quoted material rather than commands. The server independently validates all four required fields before returning them to the browser. The interface still tells the reader to compare the result with the source.
+- **Authentication lesson:** Adding an AI binding caused both local development and the original Vitest configuration to attempt a remote Cloudflare session. Workers AI always uses the Cloudflare account and may consume usage even during local development. I completed `wrangler login` on Windows. A separate `wrangler.test.jsonc` now lets automated tests inject a mock AI binding without network access or model charges.
+- **Real model verification:** Sent the public sample passage through the authenticated local Worker. It returned HTTP 200 with all required fields. Core idea: “A useful software project starts with a bounded problem and builds upon a reliable baseline.” Its three key points remained grounded in the passage. The first uncertainty response was the weak phrase “None is stated,” so I tightened the prompt to require a specific missing detail, definition, measure, or piece of evidence. The second real call identified that “bounded problem” and “reliable baseline” were undefined. The next question asked how a bounded problem can be identified. Source counts were 55 words and 330 characters.
+- **Automated verification:** 13 Worker tests pass. TypeScript and whitespace checks pass. The updated client check passed empty and oversized input, loading, rendering the four-part structured result, copy behavior, stale-result clearing, server and unreadable-response errors, theme switching, and clear behavior.
+- **Remaining review:** The local AI-enabled Worker is running at http://127.0.0.1:8787/. Browser automation again timed out while attaching, so I have not visually verified the revised result layout or captured screenshots. Refresh the open local page and run **Try an example → Distill text** before public deployment.
+- **Documentation consulted:** https://developers.cloudflare.com/workers-ai/configuration/bindings/, https://developers.cloudflare.com/workers-ai/features/json-mode/, https://developers.cloudflare.com/workers-ai/models/llama-3.3-70b-instruct-fp8-fast/, and https://developers.cloudflare.com/workers/wrangler/configuration/.
+- **Publication angle:** The build exposed a useful boundary: AI is a remote production dependency even while the UI is local. Tests should prove the contract without paying for inference; one real call should then prove that the contract holds against the actual service.
+
 - [x] Created the initial Cloudflare Worker and replaced the starter greeting with a custom DWC Distiller response.
 - [x] Tested and deployed the initial Worker on Ubuntu, as recorded in the journal. The public deployment has not been rechecked in this update.
 - [x] Corrected the malformed GitHub remote and pushed the Ubuntu project, as recorded in the journal.
@@ -126,8 +139,9 @@ This update separates completed setup from remaining product work. The original 
 - [x] Input validation, loading state, and readable errors checked through API tests and simulated client execution.
 - [x] Rendered desktop interface reviewed by me and accepted as looking good.
 - [ ] Narrow phone layout, real clipboard behavior, and screenshots verified.
-- [ ] Working baseline committed.
-- [ ] AI distillation added and reviewed, or its deferral documented.
+- [x] Working baseline committed as `c49f282`.
+- [x] AI distillation implemented, structurally tested, and verified with one real Workers AI response.
+- [ ] Revised AI result layout reviewed visually in the browser.
 - [ ] Final intended source pushed and tested version deployed.
 - [ ] Public interaction verified and evidence recorded.
 
