@@ -138,7 +138,8 @@ This update separates completed setup from remaining product work. The original 
 - [x] Browser interface and JSON request path implemented locally.
 - [x] Input validation, loading state, and readable errors checked through API tests and simulated client execution.
 - [x] Rendered desktop interface reviewed by me and accepted as looking good.
-- [ ] Narrow phone layout, real clipboard behavior, and screenshots verified.
+- [ ] Narrow phone layout and real clipboard behavior verified.
+- [x] Desktop screenshots captured for the empty state, loaded PDF, and completed distillation.
 - [x] Working baseline committed as `c49f282`.
 - [x] AI distillation implemented, structurally tested, and verified with one real Workers AI response.
 - [x] Revised AI result layout and deployed PDF control reviewed visually in the browser and accepted as looking good.
@@ -269,6 +270,9 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - What surprised me: Local Workers AI development still uses the Cloudflare account, and publishing a useful AI endpoint required thinking about usage protection as well as model output.
 - What I would change in version 2: Add text-based PDF upload first, then URL extraction and YouTube transcripts. Add stronger identity-based quotas if public use grows.
 - Screenshot locations:
+  - `docs/screenshots/dwc-distiller-empty-state.png`
+  - `docs/screenshots/dwc-distiller-pdf-loaded.png`
+  - `docs/screenshots/dwc-distiller-pdf-result.png`
 
 ### September 24 — Preparing the AI endpoint for publication
 
@@ -291,4 +295,7 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - **Publication:** Committed the feature as `ee582b8`, pushed it to GitHub, and deployed Cloudflare Worker version `956568aa-8b3c-4469-b55b-9bff368328fa`.
 - **Public verification:** The public page returned HTTP 200 with the PDF upload control and pinned PDF.js reference. The CDN module returned HTTP 200, and a live post-deployment Workers AI request returned three key points and a nonempty uncertainty field.
 - **Visual review:** Reviewed the deployed interface in the browser and accepted it as looking good.
-- **Remaining review:** Exercise **Open PDF** with a representative article PDF, inspect extraction quality, and capture desktop and phone screenshots.
+- **Representative PDF test:** Loaded a four-page published medical article. The interface correctly identified the PDF and page count, filled the 10,000-character source limit, and displayed the truncation notice before distillation. A second medical review article produced a structured result with a core idea and three source-specific key points.
+- **Observed limitation:** PDF extraction preserved some source-layout artifacts, including an isolated page number, split words, and imperfect accented-character encoding. The text remained readable, but version 2 should normalize common extraction artifacts before distillation while retaining the visible editable source as the review boundary.
+- **Evidence captured:** Saved desktop screenshots for the empty state, loaded-PDF state, and completed AI result under `docs/screenshots/` for the Doctors Who Code and AgenticBuilderMD build logs.
+- **Remaining review:** Capture a narrow phone screenshot and verify clipboard behavior on the deployed site.
