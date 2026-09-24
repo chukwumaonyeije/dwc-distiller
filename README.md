@@ -32,6 +32,6 @@ A Cloudflare Rate Limiting binding permits 20 validated distillation requests pe
 
 Workers AI always uses the Cloudflare account, including during local development, and may consume the account's Workers AI allocation. The Vitest configuration therefore uses `wrangler.test.jsonc` without a live AI binding and injects a mocked binding into the handler tests.
 
-Public baseline: https://dwc-distiller.onyeije.workers.dev/ (the new interface has not yet been deployed).
+Public application: https://dwc-distiller.onyeije.workers.dev/ (Workers AI version deployed and verified September 24, 2026).
 
 See [the build journal](DWC_Distiller_Build_Journal_2026-09-24.md) for milestones, verification evidence, and remaining work.

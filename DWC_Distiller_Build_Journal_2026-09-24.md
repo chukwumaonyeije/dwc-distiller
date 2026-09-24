@@ -142,8 +142,8 @@ This update separates completed setup from remaining product work. The original 
 - [x] Working baseline committed as `c49f282`.
 - [x] AI distillation implemented, structurally tested, and verified with one real Workers AI response.
 - [ ] Revised AI result layout reviewed visually in the browser.
-- [ ] Final intended source pushed and tested version deployed.
-- [ ] Public interaction verified and evidence recorded.
+- [x] Final intended source pushed and tested version deployed.
+- [x] Public interaction verified and evidence recorded.
 
 The writing ideas for Doctors Who Code and AgenticBuilderMD remain follow-up work: collect concrete observations during the build, then draft from what actually happened.
 
@@ -244,14 +244,14 @@ Open the `workers.dev` URL returned by deployment in a browser and on a phone. P
 
 ## Definition of done for tomorrow
 
-- [ ] Windows project pulls and runs locally.
-- [ ] Page has a textarea, Distill button, result area, loading state, and helpful errors.
-- [ ] Browser sends text to the Worker; Worker returns a JSON response.
-- [ ] Empty and oversized input are handled explicitly.
-- [ ] If AI is enabled, output is grounded in the supplied text and clearly identifies uncertainty.
-- [ ] The application works locally and at its public Cloudflare URL.
-- [ ] Final source is committed and pushed to GitHub.
-- [ ] The build journal records the public URL, final behavior, obstacles, and a screenshot or example.
+- [x] Windows project pulls and runs locally.
+- [x] Page has a textarea, Distill button, result area, loading state, and helpful errors.
+- [x] Browser sends text to the Worker; Worker returns a JSON response.
+- [x] Empty and oversized input are handled explicitly.
+- [x] If AI is enabled, output is grounded in the supplied text and clearly identifies uncertainty.
+- [x] The application works locally and at its public Cloudflare URL.
+- [x] Final source is committed and pushed to GitHub.
+- [x] The build journal records the public URL, final behavior, obstacles, and an example.
 
 ## What I want to learn from the build
 
@@ -261,13 +261,13 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 
 ## Notes to fill in after tomorrow's work
 
-- Public Worker URL: https://dwc-distiller.onyeije.workers.dev/ (baseline verified September 24; recheck after prototype deployment)
-- Final GitHub commit:
-- Distillation method or model:
-- Example source text used for testing:
-- What the Worker returned:
-- What surprised me:
-- What I would change in version 2:
+- Public Worker URL: https://dwc-distiller.onyeije.workers.dev/ (Workers AI prototype verified September 24)
+- Application source commit: `70f325b` (journal publication note follows in a documentation-only commit)
+- Distillation method or model: Cloudflare Workers AI using `@cf/meta/llama-3.3-70b-instruct-fp8-fast` with JSON Schema output
+- Example source text used for testing: “A useful software project starts with a bounded problem. Build the smallest complete path, test it with real examples, and add complexity only after the baseline is reliable.”
+- What the Worker returned: A concise core idea, three grounded key points, uncertainty about the criteria for a “reliable” baseline, and a next question about defining a bounded problem. It also returned 28 words and 174 characters.
+- What surprised me: Local Workers AI development still uses the Cloudflare account, and publishing a useful AI endpoint required thinking about usage protection as well as model output.
+- What I would change in version 2: Add text-based PDF upload first, then URL extraction and YouTube transcripts. Add stronger identity-based quotas if public use grows.
 - Screenshot locations:
 
 ### September 24 — Preparing the AI endpoint for publication
@@ -276,4 +276,6 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - **Safeguard:** Added a Cloudflare Rate Limiting binding before model inference. The shared public route permits 20 validated distillation requests per minute per Cloudflare location. Requests beyond that return HTTP 429 with a one-minute retry hint; a limiter failure returns 503 and does not call the model.
 - **Tradeoff:** Cloudflare's binding is local and eventually consistent, so the count is intentionally approximate. The application has no accounts or API keys yet, making a shared route-level key more appropriate for this prototype than using an IP address as a user identity.
 - **Verification:** Regenerated Worker types with both bindings. All 15 handler tests passed, including allowed, throttled, and limiter-failure paths. TypeScript, the browser behavior check, and `git diff --check` passed. A real local request passed through the limiter and Workers AI and returned the expected core idea, three key points, specific uncertainty, and next question.
-- **Next:** Commit and push the production safeguard, deploy the Worker, and verify one real request at the public URL.
+- **Publication:** Pushed commits `c49f282`, `8cce17a`, and `70f325b` to GitHub. Deployed Cloudflare Worker version `f1ec658a-6355-4de6-86d8-97c196a98dd0` at https://dwc-distiller.onyeije.workers.dev/ with both `AI` and `AI_RATE_LIMITER` bindings active.
+- **Public verification:** The deployed page returned HTTP 200 and contained the input form and Workers AI interface. One live public distillation returned the expected schema and a source-specific uncertainty. Browser automation could not attach to the in-app webview, so narrow-screen review, clipboard behavior, and screenshots remain manual follow-up items.
+- **Next:** Review the deployed result layout on desktop and phone, capture screenshots, then begin text-based PDF input as the next product slice.
