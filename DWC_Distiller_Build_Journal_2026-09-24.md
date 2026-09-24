@@ -141,7 +141,7 @@ This update separates completed setup from remaining product work. The original 
 - [ ] Narrow phone layout, real clipboard behavior, and screenshots verified.
 - [x] Working baseline committed as `c49f282`.
 - [x] AI distillation implemented, structurally tested, and verified with one real Workers AI response.
-- [ ] Revised AI result layout reviewed visually in the browser.
+- [x] Revised AI result layout and deployed PDF control reviewed visually in the browser and accepted as looking good.
 - [x] Final intended source pushed and tested version deployed.
 - [x] Public interaction verified and evidence recorded.
 
@@ -290,4 +290,5 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - **Verification:** The handler suite, TypeScript, browser behavior checks, and PDF type/size validation pass. A generated one-page nonclinical PDF fixture was successfully parsed with the pinned PDF.js extraction path. Temporary fixtures were removed after the check.
 - **Publication:** Committed the feature as `ee582b8`, pushed it to GitHub, and deployed Cloudflare Worker version `956568aa-8b3c-4469-b55b-9bff368328fa`.
 - **Public verification:** The public page returned HTTP 200 with the PDF upload control and pinned PDF.js reference. The CDN module returned HTTP 200, and a live post-deployment Workers AI request returned three key points and a nonempty uncertainty field.
-- **Remaining review:** Exercise **Open PDF** in a full browser with a representative article PDF, inspect extraction quality, and capture desktop and phone screenshots.
+- **Visual review:** Reviewed the deployed interface in the browser and accepted it as looking good.
+- **Remaining review:** Exercise **Open PDF** with a representative article PDF, inspect extraction quality, and capture desktop and phone screenshots.
