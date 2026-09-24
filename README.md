@@ -11,6 +11,8 @@ npm run dev
 
 Open the URL printed by Wrangler. Paste text or select **Try an example**, then **Distill text**. The Worker returns a core idea, three key points, what remains uncertain, and one question to investigate next. The result also includes a whitespace-delimited word count and the original input length. The 10,000-character input limit uses JavaScript UTF-16 length, matching the page counter.
 
+You can also select **Open PDF** for a digitally generated, text-based PDF up to 5 MB and 20 pages. PDF.js extracts text in the browser with PDF scripting and dynamic evaluation disabled. The PDF file itself is not uploaded; the extracted text is shown in the editor for review, and only that visible text is sent to Workers AI after selecting **Distill text**. Documents longer than the text limit load the first 10,000 characters. Scanned or image-only PDFs require OCR and are not supported yet. The pinned PDF.js module loads from jsDelivr when a PDF is selected, so PDF extraction requires a network connection.
+
 The model is `@cf/meta/llama-3.3-70b-instruct-fp8-fast`, called through an `AI` binding with JSON Schema output. The server validates the returned structure before sending it to the browser. The prompt instructs the model to use only the supplied source and treat instructions inside that source as quoted material. AI output can still omit or misstate details, so the interface tells readers to compare every result with the source.
 
 The interface includes light/dark themes, clear and copy controls, loading and error states, and a narrow-screen layout. Its typography and palette follow [Doctors Who Code](https://www.doctorswhocode.blog/). Fonts load from that site, with system-font fallbacks.
@@ -24,7 +26,7 @@ npx tsc --noEmit
 node test/client-check.cjs
 ```
 
-The client check runs the served script against a minimal DOM and a mocked structured AI response. It tests browser behavior; it does not verify browser rendering, clipboard permissions, mobile layout, or model quality.
+The client check runs the served script against a minimal DOM and a mocked structured AI response. It tests browser behavior and PDF file validation; it does not verify browser rendering, clipboard permissions, mobile layout, or model quality. A generated nonclinical PDF fixture was also extracted successfully with the pinned PDF.js version during development.
 
 `POST /api/distill` accepts JSON `{ "text": "Your passage" }`. Invalid input returns a readable JSON error. Request bodies are capped at 65,000 bytes before parsing; input text is capped at 10,000 UTF-16 code units. No storage binding is configured.
 

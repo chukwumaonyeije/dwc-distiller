@@ -279,3 +279,13 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - **Publication:** Pushed commits `c49f282`, `8cce17a`, and `70f325b` to GitHub. Deployed Cloudflare Worker version `f1ec658a-6355-4de6-86d8-97c196a98dd0` at https://dwc-distiller.onyeije.workers.dev/ with both `AI` and `AI_RATE_LIMITER` bindings active.
 - **Public verification:** The deployed page returned HTTP 200 and contained the input form and Workers AI interface. One live public distillation returned the expected schema and a source-specific uncertainty. Browser automation could not attach to the in-app webview, so narrow-screen review, clipboard behavior, and screenshots remain manual follow-up items.
 - **Next:** Review the deployed result layout on desktop and phone, capture screenshots, then begin text-based PDF input as the next product slice.
+
+### September 24 — Text-based PDF input
+
+- **Decision:** Kept `@cf/meta/llama-3.3-70b-instruct-fp8-fast` as the production baseline. The model is already returning the required structured schema, so the next useful experiment is a new input type rather than a model swap.
+- **User flow:** Added an **Open PDF** control beside the existing Distill and Clear actions. The browser extracts PDF text into the same visible source editor. The reader can inspect or edit the extraction before sending it to Workers AI.
+- **Privacy boundary:** The PDF file stays in the browser. Only the extracted text visible in the editor is sent to the Worker after the reader selects **Distill text**.
+- **Scope:** Version 1 accepts text-based PDFs up to 5 MB and 20 pages. It loads at most the first 10,000 characters, labels truncated excerpts, and gives a specific message for scanned or image-only PDFs because OCR is not implemented.
+- **Implementation:** Pinned Mozilla PDF.js `5.4.624` from jsDelivr. This version is outside the affected range of the July 2026 PDF.js scripting advisory. PDF scripting and dynamic evaluation are also disabled when opening a document.
+- **Verification:** The handler suite, TypeScript, browser behavior checks, and PDF type/size validation pass. A generated one-page nonclinical PDF fixture was successfully parsed with the pinned PDF.js extraction path. Temporary fixtures were removed after the check.
+- **Remaining review:** Exercise **Open PDF** in a full browser with a representative article PDF, inspect extraction quality, capture desktop and phone screenshots, and verify the public build after deployment.

@@ -20,7 +20,7 @@ const envWith = (run: ReturnType<typeof vi.fn>, limit = vi.fn().mockResolvedValu
 });
 
 describe('DWC Distiller', () => {
- it('serves the input form as HTML', async () => { const r = await SELF.fetch('https://example.com/'); expect(r.status).toBe(200); expect(r.headers.get('content-type')).toContain('text/html'); expect(await r.text()).toContain('id="distill-form"'); });
+ it('serves text and PDF input controls as HTML', async () => { const r = await SELF.fetch('https://example.com/'); expect(r.status).toBe(200); expect(r.headers.get('content-type')).toContain('text/html'); const html = await r.text(); expect(html).toContain('id="distill-form"'); expect(html).toContain('id="pdf-upload"'); expect(html).toContain('pdfjs-dist@5.4.624'); });
 	it('returns structured AI distillation and source counts', async () => {
 	const run = vi.fn().mockResolvedValue({ response: validDistillation });
 	const limit = vi.fn().mockResolvedValue({ success: true });
