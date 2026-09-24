@@ -28,6 +28,8 @@ The client check runs the served script against a minimal DOM and a mocked struc
 
 `POST /api/distill` accepts JSON `{ "text": "Your passage" }`. Invalid input returns a readable JSON error. Request bodies are capped at 65,000 bytes before parsing; input text is capped at 10,000 UTF-16 code units. No storage binding is configured.
 
+A Cloudflare Rate Limiting binding permits 20 validated distillation requests per minute for the shared public endpoint before model inference. The counter is local to a Cloudflare location and eventually consistent, so this is practical prototype protection rather than exact global accounting. Limited requests receive HTTP 429 with a 60-second retry hint. If the limiter itself is unavailable, the Worker fails closed before using Workers AI.
+
 Workers AI always uses the Cloudflare account, including during local development, and may consume the account's Workers AI allocation. The Vitest configuration therefore uses `wrangler.test.jsonc` without a live AI binding and injects a mocked binding into the handler tests.
 
 Public baseline: https://dwc-distiller.onyeije.workers.dev/ (the new interface has not yet been deployed).

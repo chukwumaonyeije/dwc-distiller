@@ -2,6 +2,7 @@ import { page } from './page';
 
 const MAX_TEXT_LENGTH = 10000;
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+const RATE_LIMIT_KEY = 'public-distill';
 
 type Distillation = {
 	coreIdea: string;
@@ -108,6 +109,18 @@ export default {
 		if (body.text.length > MAX_TEXT_LENGTH) return json({ error: 'Use at most 10,000 characters.' }, 413);
 		const text = body.text.trim();
 		if (!text) return json({ error: 'Paste some text before selecting Distill.' }, 400);
+
+		try {
+			const { success } = await env.AI_RATE_LIMITER.limit({ key: RATE_LIMIT_KEY });
+			if (!success) return json(
+				{ error: 'DWC Distiller is busy. Please wait a minute and try again.' },
+				429,
+				{ 'Retry-After': '60' },
+			);
+		} catch (error) {
+			console.error('AI request limiter failed', error instanceof Error ? error.message : 'Unknown error');
+			return json({ error: 'DWC Distiller is temporarily unavailable. Please try again shortly.' }, 503, { 'Retry-After': '60' });
+		}
 
 		try {
 			const result = await distill(text, env.AI);

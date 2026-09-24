@@ -269,3 +269,11 @@ The build also gives me material for two distinct articles. On **Doctors Who Cod
 - What surprised me:
 - What I would change in version 2:
 - Screenshot locations:
+
+### September 24 — Preparing the AI endpoint for publication
+
+- **Production concern:** A public `/api/distill` route can consume the Cloudflare account's Workers AI allocation. A working model call is not yet a responsible public endpoint without a basic usage boundary.
+- **Safeguard:** Added a Cloudflare Rate Limiting binding before model inference. The shared public route permits 20 validated distillation requests per minute per Cloudflare location. Requests beyond that return HTTP 429 with a one-minute retry hint; a limiter failure returns 503 and does not call the model.
+- **Tradeoff:** Cloudflare's binding is local and eventually consistent, so the count is intentionally approximate. The application has no accounts or API keys yet, making a shared route-level key more appropriate for this prototype than using an IP address as a user identity.
+- **Verification:** Regenerated Worker types with both bindings. All 15 handler tests passed, including allowed, throttled, and limiter-failure paths. TypeScript, the browser behavior check, and `git diff --check` passed. A real local request passed through the limiter and Workers AI and returned the expected core idea, three key points, specific uncertainty, and next question.
+- **Next:** Commit and push the production safeguard, deploy the Worker, and verify one real request at the public URL.
